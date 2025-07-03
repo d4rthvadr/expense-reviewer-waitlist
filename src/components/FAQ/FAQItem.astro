@@ -1,0 +1,90 @@
+---
+export interface Props {
+  question: string;
+  answer: string;
+}
+
+const { question, answer } = Astro.props;
+---
+
+<div class="faq-item">
+  <button class="faq-question" onclick="toggleFAQ(this)">
+    <span>{question}</span>
+    <span class="faq-icon">+</span>
+  </button>
+  <div class="faq-answer">
+    <p>{answer}</p>
+  </div>
+</div>
+
+<style>
+  .faq-item {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+
+  .faq-item:hover {
+    border-color: #6366f1;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+  }
+
+  .faq-question {
+    width: 100%;
+    padding: 1.5rem;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1f2937;
+    transition: background-color 0.2s;
+  }
+
+  .faq-question:hover {
+    background-color: #f9fafb;
+  }
+
+  .faq-item.active .faq-question {
+    background-color: #f8fafc;
+  }
+
+  .faq-icon {
+    font-size: 1.5rem;
+    color: #6366f1;
+    font-weight: 300;
+    transition: transform 0.2s;
+  }
+
+  .faq-item.active .faq-icon {
+    transform: rotate(180deg);
+  }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .faq-answer p {
+    padding: 0 1.5rem 1.5rem;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .faq-question {
+      font-size: 1rem;
+      padding: 1rem;
+    }
+
+    .faq-answer p {
+      padding: 0 1rem 1rem;
+    }
+  }
+</style>

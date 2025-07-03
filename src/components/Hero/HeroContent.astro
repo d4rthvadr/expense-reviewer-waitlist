@@ -1,0 +1,101 @@
+---
+import Button from '../UI/Button.astro';
+---
+
+<div class="hero-content">
+  <h1 class="hero-title">
+    A smarter way to manage <span class="gradient-text">your expenses</span>
+  </h1>
+  <p class="hero-description">
+    ExpenseAI uses artificial intelligence to automatically categorize, 
+    track, and analyze your expenses in a beautiful and simple app.
+  </p>
+  <Button variant="primary" size="large">Join the Waitlist - It's Free</Button>
+  <p class="no-credit">No credit card required</p>
+  <p class="faq-link" data-scroll-to="faq">
+    Have questions? Check our <span class="faq-link-text">FAQ section</span> for answers
+  </p>
+</div>
+
+<style>
+  .hero-content {
+    text-align: left;
+  }
+
+  .hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    display: inline;
+  }
+
+  /* Fallback for browsers that don't support background-clip: text */
+  @supports not (background-clip: text) or not (-webkit-background-clip: text) {
+    .gradient-text {
+      color: #6366f1;
+      background: none;
+      -webkit-text-fill-color: initial;
+    }
+  }
+
+  .hero-description {
+    font-size: 1.25rem;
+    color: #666;
+    margin-bottom: 2.5rem;
+    max-width: 500px;
+  }
+
+  .no-credit {
+    margin-top: 1rem;
+    color: #888;
+    font-size: 0.9rem;
+  }
+
+  .faq-link {
+    margin-top: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .faq-link:hover {
+    color: #6366f1;
+  }
+
+  .faq-link-text {
+    color: #6366f1;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 0.2s ease;
+  }
+
+  .faq-link:hover .faq-link-text {
+    text-decoration-color: #6366f1;
+  }
+
+  @media (max-width: 768px) {
+    .hero-content {
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+    }
+
+    .hero-description {
+      font-size: 1.1rem;
+      max-width: 100%;
+    }
+  }
+</style>

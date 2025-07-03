@@ -1,0 +1,37 @@
+---
+export interface Props {
+  text: string;
+  gradient?: string;
+  class?: string;
+}
+
+const { 
+  text, 
+  gradient = 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%)',
+  class: className = ''
+} = Astro.props;
+---
+
+<span class={`gradient-text ${className}`}>
+  {text}
+</span>
+
+<style>
+  .gradient-text {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    display: inline;
+    font-weight: inherit;
+  }
+  
+  /* Fallback for browsers that don't support background-clip: text */
+  @supports not (background-clip: text) {
+    .gradient-text {
+      color: #6366f1;
+      background: none;
+    }
+  }
+</style>

@@ -1,0 +1,65 @@
+---
+// Device mockups container for hero section
+import PhonePreview from './PhonePreview.astro';
+import TabletPreview from './TabletPreview.astro';
+---
+
+<div class="device-mockups">
+	<div class="phone-container">
+		<PhonePreview />
+	</div>
+	<div class="tablet-container">
+		<TabletPreview />
+	</div>
+</div>
+
+<style>
+	.device-mockups {
+		position: relative;
+		width: 100%;
+		height: 500px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.phone-container {
+		position: relative;
+		z-index: 3;
+	}
+
+	.tablet-container {
+		position: absolute;
+		top: 50%;
+		left: -150px;
+		transform: translateY(-50%);
+		z-index: 2;
+	}
+
+	/* Responsive adjustments */
+	@media (max-width: 1200px) {
+		.tablet-container {
+			left: -100px;
+		}
+	}
+
+	@media (max-width: 1024px) {
+		.tablet-container {
+			left: -50px;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.device-mockups {
+			height: 400px;
+		}
+
+		.tablet-container {
+			display: none;
+		}
+
+		.phone-container {
+			margin: 0 auto;
+		}
+	}
+</style>

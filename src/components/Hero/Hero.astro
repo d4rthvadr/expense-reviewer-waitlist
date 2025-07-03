@@ -1,0 +1,76 @@
+---
+// Main hero section component
+import HeroContent from './HeroContent.astro';
+import DeviceMockups from './DeviceMockups.astro';
+import ScrollIndicator from './ScrollIndicator.astro';
+---
+
+<section class="hero">
+	<div class="hero-container">
+		<div class="hero-left">
+			<HeroContent />
+		</div>
+		<div class="hero-right">
+			<DeviceMockups />
+		</div>
+	</div>
+	<ScrollIndicator />
+</section>
+
+<style>
+	.hero {
+		min-height: 100vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+		overflow: hidden;
+		background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+		padding: 4rem 2rem;
+	}
+
+	.hero-container {
+		max-width: 1400px;
+		margin: 0 auto;
+		padding: 2rem;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 4rem;
+		align-items: center;
+		width: 100%;
+		position: relative;
+		z-index: 1;
+	}
+
+	.hero-left {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.hero-right {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	/* Responsive design */
+	@media (max-width: 768px) {
+		.hero-container {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+			padding: 1rem;
+		}
+
+		.hero-right {
+			order: -1;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.hero {
+			min-height: auto;
+			padding: 2rem 0;
+		}
+	}
+</style>

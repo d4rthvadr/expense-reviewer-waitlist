@@ -1,0 +1,176 @@
+---
+// Tablet/MacBook dashboard preview component
+---
+
+<div class="tablet-mockup animate-slide-in-left">
+	<div class="tablet-screen">
+		<div class="tablet-content">
+			<div class="dashboard-header">
+				<h2>ExpenseAI Dashboard</h2>
+				<div class="dashboard-nav">
+					<span class="nav-item active">Overview</span>
+					<span class="nav-item">Analytics</span>
+					<span class="nav-item">Categories</span>
+				</div>
+			</div>
+			<div class="dashboard-grid">
+				<div class="stats-card">
+					<h3>This Month</h3>
+					<p class="stat-amount">$2,195.00</p>
+					<span class="stat-change">+12% from last month</span>
+				</div>
+				<div class="stats-card">
+					<h3>Top Category</h3>
+					<p class="stat-amount">Food & Dining</p>
+					<span class="stat-change">$687.50 spent</span>
+				</div>
+				<div class="chart-placeholder">
+					<div class="chart-bars">
+						<div class="bar" style="height: 60%"></div>
+						<div class="bar" style="height: 80%"></div>
+						<div class="bar" style="height: 45%"></div>
+						<div class="bar" style="height: 70%"></div>
+						<div class="bar" style="height: 90%"></div>
+						<div class="bar" style="height: 65%"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.tablet-mockup {
+		position: absolute;
+		background: linear-gradient(145deg, #e2e8f0 0%, #cbd5e1 100%);
+		border-radius: 20px;
+		padding: 1.5rem;
+		width: 600px;
+		height: 400px;
+		box-shadow: 
+			0 30px 60px rgba(0, 0, 0, 0.15),
+			0 0 0 1px rgba(255, 255, 255, 0.1);
+		z-index: 1;
+	}
+
+	.animate-slide-in-left {
+		opacity: 0;
+		transform: translateX(-100px);
+		animation: slideInLeft 1s ease-out 0.3s forwards;
+	}
+
+	@keyframes slideInLeft {
+		to {
+			opacity: 1;
+			transform: translateX(0);
+		}
+	}
+
+	.tablet-screen {
+		background: white;
+		border-radius: 12px;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		position: relative;
+	}
+
+	.tablet-content {
+		padding: 2rem;
+		height: 100%;
+	}
+
+	.dashboard-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 2rem;
+	}
+
+	.dashboard-header h2 {
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: #1f2937;
+	}
+
+	.dashboard-nav {
+		display: flex;
+		gap: 2rem;
+	}
+
+	.nav-item {
+		font-size: 0.9rem;
+		color: #666;
+		cursor: pointer;
+		transition: color 0.2s;
+	}
+
+	.nav-item.active {
+		color: #6366f1;
+		font-weight: 600;
+	}
+
+	.dashboard-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1.5rem;
+		height: calc(100% - 4rem);
+	}
+
+	.stats-card {
+		background: #f8fafc;
+		border-radius: 12px;
+		padding: 1.5rem;
+		border: 1px solid #e2e8f0;
+	}
+
+	.stats-card h3 {
+		font-size: 0.9rem;
+		color: #666;
+		margin-bottom: 0.5rem;
+	}
+
+	.stat-amount {
+		font-size: 1.8rem;
+		font-weight: 700;
+		color: #1f2937;
+		margin-bottom: 0.5rem;
+	}
+
+	.stat-change {
+		font-size: 0.8rem;
+		color: #10b981;
+	}
+
+	.chart-placeholder {
+		grid-column: 1 / -1;
+		background: #f8fafc;
+		border-radius: 12px;
+		padding: 1.5rem;
+		border: 1px solid #e2e8f0;
+		display: flex;
+		align-items: end;
+		justify-content: center;
+	}
+
+	.chart-bars {
+		display: flex;
+		gap: 0.5rem;
+		align-items: end;
+		height: 100px;
+	}
+
+	.bar {
+		width: 20px;
+		background: linear-gradient(180deg, #6366f1 0%, #8b5cf6 100%);
+		border-radius: 4px 4px 0 0;
+		min-height: 20px;
+	}
+
+	/* Responsive - hide on mobile */
+	@media (max-width: 768px) {
+		.tablet-mockup {
+			display: none;
+		}
+	}
+</style>

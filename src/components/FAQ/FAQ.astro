@@ -1,0 +1,37 @@
+---
+import FAQList from './FAQList.astro';
+import { faqData } from '../../data/faq';
+---
+
+<section id="faq" class="faq">
+  <div class="faq-container">
+    <h2 class="faq-title">Frequently Asked Questions</h2>
+    <FAQList items={faqData} />
+  </div>
+</section>
+
+<style>
+  .faq {
+    padding: 4rem 2rem;
+    background: white;
+  }
+
+  .faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .faq-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 3rem;
+    color: #1f2937;
+  }
+
+  @media (max-width: 768px) {
+    .faq-title {
+      font-size: 2rem;
+    }
+  }
+</style>
