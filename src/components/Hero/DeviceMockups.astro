@@ -51,15 +51,79 @@ import TabletPreview from './TabletPreview.astro';
 
 	@media (max-width: 768px) {
 		.device-mockups {
-			height: 400px;
+			height: 320px;
+			overflow: hidden;
+			position: relative;
 		}
 
 		.tablet-container {
-			display: none;
+			position: absolute;
+			top: 0;
+			left: 50%;
+			transform: translateX(-50%) scale(0.65);
+			z-index: 1;
+			opacity: 0.8;
 		}
 
 		.phone-container {
-			margin: 0 auto;
+			position: absolute;
+			top: 0;
+			left: 50%;
+			transform: translateX(-50%);
+			z-index: 3;
+		}
+
+		/* Add fade-out effect at bottom */
+		.device-mockups::after {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			height: 80px;
+			background: linear-gradient(transparent, #f8fafc);
+			pointer-events: none;
+			z-index: 5;
+		}
+	}
+
+	@media (max-width: 576px) {
+		.device-mockups {
+			height: 280px;
+		}
+
+		.tablet-container {
+			top: 0;
+			transform: translateX(-50%) scale(0.55);
+			opacity: 0.7;
+		}
+
+		.phone-container {
+			top: 0;
+		}
+
+		.device-mockups::after {
+			height: 90px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.device-mockups {
+			height: 240px;
+		}
+
+		.tablet-container {
+			top: 0;
+			transform: translateX(-50%) scale(0.45);
+			opacity: 0.6;
+		}
+
+		.phone-container {
+			top: 0;
+		}
+
+		.device-mockups::after {
+			height: 100px;
 		}
 	}
 </style>

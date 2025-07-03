@@ -73,9 +73,9 @@ const classes = `btn ${variantClasses[variant]} ${sizeClasses[size]} ${className
     transform: translateY(-1px);
   }
 
-  .btn-small {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
+  .btn-large {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
   }
 
   .btn-medium {
@@ -83,8 +83,37 @@ const classes = `btn ${variantClasses[variant]} ${sizeClasses[size]} ${className
     font-size: 1rem;
   }
 
-  .btn-large {
-    padding: 1rem 2rem;
-    font-size: 1.1rem;
+  .btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 576px) {
+    .btn-large {
+      padding: 0.9rem 1.8rem;
+      font-size: 1rem;
+    }
+
+    .btn-medium {
+      padding: 0.7rem 1.3rem;
+      font-size: 0.95rem;
+    }
+
+    .btn-small {
+      padding: 0.45rem 0.9rem;
+      font-size: 0.85rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .btn {
+      border-radius: 10px;
+    }
+
+    .btn-large {
+      padding: 0.8rem 1.5rem;
+      font-size: 0.95rem;
+    }
   }
 </style>
