@@ -6,7 +6,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lint": "astro lint",
+    "vercel-build": "astro build"
   },
   "dependencies": {
     "astro": "^5.11.0"
