@@ -10,12 +10,48 @@ import Button from '../UI/Button.astro';
     ExpenseAI uses artificial intelligence to automatically categorize, 
     track, and analyze your expenses in a beautiful and simple app.
   </p>
-  <Button variant="primary" size="large">Join the Waitlist - It's Free</Button>
+  <Button 
+    variant="primary" 
+    size="large"
+    onclick="handleWaitlistSignup()"
+  >
+    Join the Waitlist - It's Free
+  </Button>
   <p class="no-credit">No credit card required</p>
   <p class="faq-link" data-scroll-to="faq">
     Have questions? Check our <span class="faq-link-text">FAQ section</span> for answers
   </p>
 </div>
+
+<script>
+  // Type declaration for PostHog global object
+  declare global {
+    interface Window {
+      posthog: {
+        capture: (event: string, properties?: Record<string, any>) => void;
+        identify: (userId: string, properties?: Record<string, any>) => void;
+        reset: () => void;
+      };
+    }
+  }
+
+  function handleWaitlistSignup() {
+    // Track the waitlist signup event
+    if (typeof window.posthog !== 'undefined') {
+      window.posthog.capture('waitlist_signup_clicked', {
+        source: 'hero_section',
+        page: 'landing',
+        button_text: 'Join the Waitlist - Its Free',
+        timestamp: new Date().toISOString(),
+        device_type: window.innerWidth < 768 ? 'mobile' : 'desktop'
+      });
+    }
+    
+    // Optional: Add other functionality here
+    // e.g., open modal, redirect to signup form, etc.
+    console.log('Waitlist signup clicked');
+  }
+</script>
 
 <style>
   .hero-content {
