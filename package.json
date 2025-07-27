@@ -11,6 +11,8 @@
     "vercel-build": "astro build"
   },
   "dependencies": {
-    "astro": "^5.11.0"
+    "@astrojs/vercel": "^8.2.3",
+    "astro": "^5.11.0",
+    "resend": "^4.7.0"
   }
 }
