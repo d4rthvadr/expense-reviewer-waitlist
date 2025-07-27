@@ -10,13 +10,43 @@ import Button from '../UI/Button.astro';
     ExpenseAI uses artificial intelligence to automatically categorize, 
     track, and analyze your expenses in a beautiful and simple app.
   </p>
-  <Button 
-    variant="primary" 
-    size="large"
-    onclick="handleWaitlistSignup()"
-  >
-    Join the Waitlist - It's Free
-  </Button>
+  <div id="waitlist-form" class="waitlist-form">
+    <Button 
+      variant="primary" 
+      size="large"
+      onclick="showEmailForm()"
+    >
+      Join the Waitlist - It's Free
+    </Button>
+    
+    <!-- Email form (initially hidden) -->
+    <div id="email-form" class="email-form hidden">
+      <div class="form-container">
+        <h3 class="form-title">Join the ExpenseAI Waitlist</h3>
+        <form id="waitlist-email-form" class="email-input-form">
+          <div class="input-group">
+            <input 
+              type="email" 
+              id="email-input"
+              placeholder="Enter your email address"
+              required
+              class="email-input"
+            />
+            <div class="button-group">
+              <button type="submit" class="submit-btn">
+                <span class="submit-text">Join Waitlist</span>
+                <span class="loading-text hidden">Joining...</span>
+              </button>
+              <button type="button" onclick="hideEmailForm()" class="cancel-btn">
+                Cancel
+              </button>
+            </div>
+          </div>
+          <div id="form-message" class="form-message"></div>
+        </form>
+      </div>
+    </div>
+  </div>
   <p class="no-credit">No credit card required</p>
   <p class="faq-link" data-scroll-to="faq">
     Have questions? Check our <span class="faq-link-text">FAQ section</span> for answers
@@ -32,11 +62,13 @@ import Button from '../UI/Button.astro';
         identify: (userId: string, properties?: Record<string, any>) => void;
         reset: () => void;
       };
+      showEmailForm: () => void;
+      hideEmailForm: () => void;
     }
   }
 
-  function handleWaitlistSignup() {
-    // Track the waitlist signup event
+  function showEmailForm() {
+    // Track the initial button click
     if (typeof window.posthog !== 'undefined') {
       window.posthog.capture('waitlist_signup_clicked', {
         source: 'hero_section',
@@ -47,10 +79,173 @@ import Button from '../UI/Button.astro';
       });
     }
     
-    // Optional: Add other functionality here
-    // e.g., open modal, redirect to signup form, etc.
-    console.log('Waitlist signup clicked');
+    // Hide the button and show the email form with smooth transition
+    const button = document.getElementById('waitlist-form')?.querySelector('button');
+    const emailForm = document.getElementById('email-form');
+    
+    if (button && emailForm) {
+      // Fade out button
+      button.style.opacity = '0';
+      button.style.transform = 'translateY(10px)';
+      
+      setTimeout(() => {
+        button.style.display = 'none';
+        emailForm.classList.remove('hidden');
+        
+        // Focus on the email input after transition
+        setTimeout(() => {
+          const emailInput = document.getElementById('email-input') as HTMLInputElement;
+          emailInput?.focus();
+        }, 150);
+      }, 200);
+    }
   }
+
+  function hideEmailForm() {
+    // Show the button and hide the email form with smooth transition
+    const button = document.getElementById('waitlist-form')?.querySelector('button');
+    const emailForm = document.getElementById('email-form');
+    
+    if (button && emailForm) {
+      // Hide form first
+      emailForm.classList.add('hidden');
+      
+      setTimeout(() => {
+        // Show and animate button back in
+        button.style.display = 'inline-flex';
+        button.style.opacity = '0';
+        button.style.transform = 'translateY(-10px)';
+        
+        // Animate button in
+        setTimeout(() => {
+          button.style.opacity = '1';
+          button.style.transform = 'translateY(0)';
+        }, 50);
+        
+        // Clear the form
+        const form = document.getElementById('waitlist-email-form') as HTMLFormElement;
+        form?.reset();
+        clearFormMessage();
+      }, 300);
+    }
+  }
+
+  // Make functions globally available
+  window.showEmailForm = showEmailForm;
+  window.hideEmailForm = hideEmailForm;
+
+  function showFormMessage(message: string, type: 'success' | 'error') {
+    const messageEl = document.getElementById('form-message');
+    if (messageEl) {
+      messageEl.textContent = message;
+      messageEl.className = `form-message ${type}`;
+    }
+  }
+
+  function clearFormMessage() {
+    const messageEl = document.getElementById('form-message');
+    if (messageEl) {
+      messageEl.textContent = '';
+      messageEl.className = 'form-message';
+    }
+  }
+
+  function setFormLoading(loading: boolean) {
+    const submitBtn = document.querySelector('.submit-btn') as HTMLButtonElement;
+    const submitText = document.querySelector('.submit-text');
+    const loadingText = document.querySelector('.loading-text');
+    const emailInput = document.getElementById('email-input') as HTMLInputElement;
+    
+    if (submitBtn && submitText && loadingText && emailInput) {
+      submitBtn.disabled = loading;
+      emailInput.disabled = loading;
+      
+      if (loading) {
+        submitText.classList.add('hidden');
+        loadingText.classList.remove('hidden');
+      } else {
+        submitText.classList.remove('hidden');
+        loadingText.classList.add('hidden');
+      }
+    }
+  }
+
+  // Handle form submission
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('waitlist-email-form');
+    
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const emailInput = document.getElementById('email-input') as HTMLInputElement;
+      const email = emailInput?.value.trim();
+      
+      if (!email) {
+        showFormMessage('Please enter a valid email address', 'error');
+        return;
+      }
+      
+      // Set loading state
+      setFormLoading(true);
+      clearFormMessage();
+      
+      try {
+        // Send email to API
+        const response = await fetch('/api/send', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            email,
+            source: 'hero_waitlist',
+            timestamp: new Date().toISOString()
+          }),
+        });
+        
+        const result = await response.json();
+
+        console.log('API response:', result);
+        
+        if (response.ok && result.success) {
+          // Track successful signup
+          if (typeof window.posthog !== 'undefined') {
+            window.posthog.capture('waitlist_email_submitted', {
+              source: 'hero_section',
+              email_domain: email.split('@')[1],
+              success: true
+            });
+          }
+          
+          showFormMessage('🎉 Thanks! You\'re on the waitlist. We\'ll be in touch soon!', 'success');
+          
+          // Auto-hide form after success
+          setTimeout(() => {
+            hideEmailForm();
+          }, 6 * 1000);
+          
+        } else {
+          throw new Error(result.error || 'Failed to join waitlist');
+        }
+        
+      } catch (error) {
+        console.error('Waitlist signup error:', error);
+        
+        // Track failed signup
+        if (typeof window.posthog !== 'undefined') {
+          window.posthog.capture('waitlist_email_submitted', {
+            source: 'hero_section',
+            success: false,
+            error: (error as Error).message
+          });
+        }
+        
+        showFormMessage('Something went wrong. Please try again.', 'error');
+      } finally {
+        setFormLoading(false);
+      }
+    });
+  });
 </script>
 
 <style>
@@ -94,6 +289,172 @@ import Button from '../UI/Button.astro';
     margin-top: 1rem;
     color: #888;
     font-size: 0.9rem;
+  }
+
+  /* Email Form Styles */
+  .waitlist-form {
+    position: relative;
+    min-height: 60px; /* Reserve space for button */
+  }
+
+  /* Add smooth transitions to the button */
+  .waitlist-form button {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .email-form {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
+
+  .email-form:not(.hidden) {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+  }
+
+  .email-form.hidden {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+  }
+
+  .form-container {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    max-width: 400px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .form-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #ffffff;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .email-input-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .email-input {
+    padding: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.15);
+    font-weight: 500;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .email-input::placeholder {
+    color: #747474;
+    font-weight: 400;
+  }
+
+  .email-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .button-group {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .submit-btn {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+    display: block;
+    width: 100%;
+  }
+
+  .submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .cancel-btn {
+    padding: 1rem 1.5rem;
+    background: transparent;
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .cancel-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    color: #ffffff;
+  }
+
+  .loading-text, .submit-text {
+    transition: opacity 0.2s ease;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .form-message {
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .form-message.success {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+  }
+
+  .form-message.error {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
   }
 
   .faq-link {
@@ -143,6 +504,25 @@ import Button from '../UI/Button.astro';
 
     .faq-link {
       margin-top: 1.2rem;
+    }
+
+    /* Mobile email form styles */
+    .waitlist-form {
+      min-height: 50px; /* Adjust for mobile button size */
+    }
+    
+    .form-container {
+      padding: 1.5rem;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .button-group {
+      flex-direction: column;
+    }
+
+    .cancel-btn {
+      padding: 0.75rem 1rem;
     }
   }
 
