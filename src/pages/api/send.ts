@@ -1,6 +1,9 @@
 import type { APIRoute } from "astro";
 import { Resend } from "resend";
 
+// Ensure this API route runs on the server
+export const prerender = false;
+
 const EMAIL_FROM = "onboarding@resend.dev";
 
 // Email validation regex
