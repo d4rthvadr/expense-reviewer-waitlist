@@ -1,5 +1,6 @@
 ---
 import PostHog from '../components/posthog.astro';
+import Analytics from '@vercel/analytics/astro'
 ---
 <!doctype html>
 <html lang="en">
@@ -10,6 +11,7 @@ import PostHog from '../components/posthog.astro';
 		<meta name="generator" content={Astro.generator} />
 		<title>Astro Basics</title>
 		<PostHog />
+		<Analytics />
 	</head>
 	<body>
 		<slot />
