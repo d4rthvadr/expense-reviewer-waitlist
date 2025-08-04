@@ -9,6 +9,17 @@ const EMAIL_FROM = "onboarding@resend.dev";
 // Email validation regex
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/**
+ * Generates an idempotency key for the expense reviewer waitlist based on the provided email.
+ * The key is prefixed with "expense-reviewer-waitlist-" and truncated to a maximum of 256 characters.
+ *
+ * @param email - The email address to include in the idempotency key.
+ * @returns A string representing the idempotency key, with a maximum length of 256 characters.
+ */
+const generateIdempotencyKey = (email: string): string => {
+  return `expense-reviewer-waitlist-${email}`.substring(0, 256); // Max 256 chars
+};
+
 const validateEmail = (
   email: string
 ): { isValid: boolean; error?: string; data: { email: string } } => {
@@ -86,12 +97,17 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Send welcome email
-    await resend.emails.send({
-      from: EMAIL_FROM,
-      to: emailValidation.data.email,
-      subject: "Hey there! Welcome to the ExpenseAI wait list",
-      html: "<p>Your wait list signup was successful!</p>",
-    });
+    await resend.emails.send(
+      {
+        from: EMAIL_FROM,
+        to: emailValidation.data.email,
+        subject: "Hey there! Welcome to the ExpenseAI wait list",
+        html: "<p>Your wait list signup was successful!</p>",
+      },
+      {
+        idempotencyKey: generateIdempotencyKey(emailValidation.data.email),
+      }
+    );
 
     return new Response(
       JSON.stringify({
